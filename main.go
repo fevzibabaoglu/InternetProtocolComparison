@@ -3,37 +3,20 @@ package main
 import (
 	"flag"
 
-	"github.com/fevzibabaoglu/InternetProtocolComparison/protocols"
+	"github.com/fevzibabaoglu/InternetProtocolComparison/comms"
 )
 
 func main() {
-	var ip string
 	var protocol string
+	var ip string
+	var port string
 	var isServer bool
 
+	flag.StringVar(&protocol, "protocol", "tcp", "Select protocol [TCP/UDP/QUIC]")
 	flag.StringVar(&ip, "ip", "localhost", "IP")
-	flag.StringVar(&protocol, "protocol", "tcp", "Protocol")
+	flag.StringVar(&port, "port", "3000", "Port")
 	flag.BoolVar(&isServer, "server", false, "Enable server mode")
 	flag.Parse()
 
-	switch isServer {
-	case true:
-		switch protocol {
-		case "tcp":
-			protocols.TCPServer(ip)
-		case "udp":
-			protocols.UDPServer(ip)
-		case "quic":
-			protocols.QUICServer(ip)
-		}
-	case false:
-		switch protocol {
-		case "tcp":
-			protocols.TCPClient(ip)
-		case "udp":
-			protocols.UDPClient(ip)
-		case "quic":
-			protocols.QUICClient(ip)
-		}
-	}
+	comms.Run(protocol, ip, port, isServer)
 }
