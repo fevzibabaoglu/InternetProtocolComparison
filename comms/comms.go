@@ -5,10 +5,11 @@ import (
 	"log"
 	"strings"
 	"sync"
+	"time"
 )
 
 const (
-	messageSize  = 128 // Max 'messageSize' is '255' due to usage of 1 byte uint8 as 'byteSize' in '(*socket).Receive()'.
+	messageSize  = 255 // Max 'messageSize' is '255' due to usage of 1 byte uint8 as 'byteSize' in '(*socket).Receive()'.
 	messageCount = 1000000
 )
 
@@ -30,7 +31,7 @@ func Run(protocol, ip, port string, bidirectional bool) {
 	}
 
 	// start sockets
-	log.Printf("%s test starting.\n", protocol)
+	log.Printf("%s sockets are starting.\n", protocol)
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
@@ -54,6 +55,9 @@ func Run(protocol, ip, port string, bidirectional bool) {
 		rand.Read(message)
 		messages = append(messages, message)
 	}
+
+	// start the timer
+	start := time.Now()
 
 	// server-send/client-receive test
 	if bidirectional {
@@ -95,7 +99,16 @@ func Run(protocol, ip, port string, bidirectional bool) {
 		}
 	}()
 
-	// done
+	// wait for the functions to end
 	wg.Wait()
-	log.Printf("%s successful.\n\n", protocol)
+
+	// stop the timer
+	duration := time.Since(start)
+
+	// log the result
+	log.Printf("%s is successful.\n", protocol)
+	log.Printf("%d messages with length of %d bytes (total of %d bytes) interchanged in %v (byte per %v).\n\n",
+		messageCount, messageSize, messageCount*messageSize,
+		duration, duration/(messageCount*messageSize),
+	)
 }
