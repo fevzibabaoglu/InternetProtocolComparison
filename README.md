@@ -1,5 +1,9 @@
+---
+
 # InternetProtocolComparison
 Comparison of TCP/UDP/QUIC by speed and reliability in GO.
+
+---
 
 ## The results gathered on my end are the following:
 
@@ -13,8 +17,8 @@ Comparison of TCP/UDP/QUIC by speed and reliability in GO.
 1000000 messages with a length of 255 bytes (total of 255000000 bytes) interchanged in 4.0459975s (byte per 15ns).
 
 ---
-**NOTE**
 
+## Notes:
 The timings were calculated only in localhost. The results will vary depending on usage of the internet, wifi, etc.
 
 ---
